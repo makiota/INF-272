@@ -1,0 +1,102 @@
+create database Deliv;
+go
+
+use Deliv
+go
+
+CREATE TABLE Representative (
+RepID INT IDENTITY(1,1),
+Name varchar(255) not null,
+Surname varchar(255) not null,
+ContactNumber varchar(255) not null,
+EmailAddress varchar(255) not null,
+PRIMARY KEY (RepID)
+);
+
+Create table Continent (
+ContinentID INT IDENTITY(1,1),
+ContinentName varchar(255),
+pRIMARY KEY(ContinentID)
+);
+
+Create table Country (
+CountryID INT IDENTITY(1,1),
+CountryName varchar(255) not null,
+CountryCode int not null,
+ContinentID int not null,
+RepID INT NOT NULL,
+Primary key (CountryID),
+Foreign key (RepID) REFERENCES Representative(RepID),
+Foreign key (ContinentID) REFERENCES Continent(ContinentID)
+);
+
+Create table Resources (
+ResourceID int identity(1,1),
+ResourceLineID INT not null,
+ResourceType varchar(255) not null,
+Price money not null,
+primary key(ResourceID)
+);
+
+Create table ResourceLine (
+ResourceLineID INT IDENTITY(1,1),
+ResourceID INT NOT NULL,
+ResourceType varchar(255) not null,
+Price money not null,
+Primary key (ResourceLineID),
+fOREIGN KEY (ResourceID) REFERENCES Resources(ResourceID)
+);
+
+create table Tax (
+TaxID int identity(1,1) primary key,
+Dates date not null,
+Value int not null,
+);
+
+Create table Sale (
+SaleID int identity(1,1),
+ResourceID int not null,
+SaleDate date not null,
+TaxID int not null,
+Primary Key (SaleID),
+Foreign Key (ResourceID) REFERENCES Resources(ResourceID)
+);
+
+Create table Bank (
+BankName varchar(255) not null,
+Amount money not null,
+AccountNumber int not null,
+);
+
+Create table Payment (
+PaymentID int identity(1,1),
+Amount money not null,
+PaymentDate date not null,
+BankName varchar(255) not null,
+Primary key (PaymentID)
+);
+
+Create table SalesPayment (
+SaleID int not null,
+PaymentID int not null,
+Primary key (SaleID),
+fOREIGN KEY (SaleID) REFERENCES Sale(SaleID),
+fOREIGN KEY (PaymentID) REFERENCES Payment(PaymentID),
+);
+
+Create table PaymentType (
+PaymentTypeID int identity(1,1),
+PaymentTypeName varchar(255) not null,
+PaymentID INT NOT NULL,
+pRIMARY KEY (PaymentTypeID),
+Foreign key (PaymentID) REFERENCES Payment(PaymentID),
+);
+
+Create table SalesResource (
+SaleID INT IDENTITY(1,1),
+ResourceID INT NOT NULL,
+Quantity int not null,
+Primary key (SaleID),
+Foreign key (SaleID) REFERENCES Sale(SaleID),
+fOREIGN KEY (ResourceID) REFERENCES Resources(ResourceID),
+);
